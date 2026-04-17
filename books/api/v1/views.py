@@ -81,14 +81,14 @@ class RatingAPIView(APIView):
                 [user_id, book_id]
             )
             if not cursor.fetchone():
-                return Response({'detail': "Siz bu kitobni o'qimagansiz"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'detail': "o'qimagansiz"}, status=status.HTTP_400_BAD_REQUEST)
                 
             cursor.execute(
                 "SELECT id FROM books_rating WHERE user_id = %s AND book_id = %s",
                 [user_id, book_id]
             )
             if cursor.fetchone():
-                return Response({'detail': "Allaqachon baho bergansiz"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'detail': " baho bergansiz"}, status=status.HTTP_400_BAD_REQUEST)
                 
             cursor.execute(
                 "INSERT INTO books_rating (user_id, book_id, score) VALUES (%s, %s, %s)",

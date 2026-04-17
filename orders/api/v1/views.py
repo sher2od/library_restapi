@@ -49,7 +49,7 @@ class OrderAcceptAPIView(APIView):
             cursor.execute("SELECT status, booked_at FROM orders_order WHERE id = %s", [pk])
             row = cursor.fetchone()
             if not row:
-                return Response({'detail': "Topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'detail': "topilmadi"}, status=status.HTTP_404_NOT_FOUND)
                 
             status_current, booked_at = row
             if status_current != 'booked':
@@ -57,7 +57,7 @@ class OrderAcceptAPIView(APIView):
                 
             if timezone.now() > booked_at + timedelta(days=1):
                 cursor.execute("DELETE FROM orders_order WHERE id = %s", [pk])
-                return Response({'detail': "1 kun o'tib ketgan, bron yechildi."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'detail': "1 kun o'tib ketgan zakaz yechildi."}, status=status.HTTP_400_BAD_REQUEST)
 
             days = int(request.data.get('days', 3))
             borrowed_at = timezone.now()

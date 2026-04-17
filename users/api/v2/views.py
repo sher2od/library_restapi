@@ -10,8 +10,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_permissions(self):
-        # Yangi foydalanuvchi yaratish (registratsiya) hamma uchun ochiq
+        #hamma uchun ochiq
         if self.action == 'create':
             return [AllowAny()]
-        # Qolgan funksiyalar asosan admin yoki operatorlarga
+        #admin va operatorlarga
         return [IsAdminOrOperator()]

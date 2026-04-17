@@ -35,12 +35,12 @@ class OrderViewSet(viewsets.ModelViewSet):
         if order.status != 'booked':
             return Response({'detail': "Faqat band (booked) qilinganlar qabul qilinadi"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # 1 kun o'tib ketgan bo'lsa brondan yechish (o'chirish) qoidasi
+        # 1 kun o'tib ketgan zakazni yecgib olish
         if timezone.now() > order.booked_at + timedelta(days=1):
             order.delete()
-            return Response({'detail': "1 kun ichida olinmagani uchun brondan yechildi"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': "1 kun ichida olinmagani uchun zakazdan yechildi"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Kunlik ijara olinadi, default 3 kun
+        # Kunlik ijara olinadi 3 kun
         days = int(request.data.get('days', 3))
         
         order.status = 'borrowed'
@@ -55,7 +55,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         order = self.get_object()
 
         if order.status != 'borrowed':
-            return Response({'detail': "Faqat olib ketilgan (borrowed) kitoblarni qaytarish mumkin"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': "Faqat olib ketilgan kitoblarni qaytarish mumkin"}, status=status.HTTP_400_BAD_REQUEST)
 
         now = timezone.now()
         fine = 0
@@ -63,7 +63,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             late_days = (now - order.due_date).days
             if late_days > 0:
                 daily_price = float(order.book.daily_price)
-                fine = late_days * (daily_price * 0.01) # 1% jarima hisobi
+                fine = late_days * (daily_price * 0.01) # 1% qoshiladi 
 
         order.status = 'returned'
         order.fine_amount = fine

@@ -22,14 +22,14 @@ class BookViewSet(viewsets.ModelViewSet):
         book = self.get_object()
         user = request.user
         
-        # Tekshiruv: Foydalanuvchi bu kitobni o'qib qaytarganmi
+        #Foydalanuvchi bu kitobni o'qib qaytarganmi
         read_book = Order.objects.filter(user=user, book=book, status='returned').exists()
         if not read_book:
-            return Response({'detail': "Siz bu kitobni o'qimagansiz"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': "o'qimagansiz"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Tekshiruv: Oldin baho berganmi
+        #Oldin baho berganmi
         if Rating.objects.filter(user=user, book=book).exists():
-            return Response({'detail': "Allaqachon baho bergansiz"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': "baho bergansiz"}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid():
