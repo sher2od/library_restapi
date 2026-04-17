@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -29,4 +30,8 @@ urlpatterns = [
     # Versioned API Endpoints
     path('api/v1/', include((api_v1_patterns, 'v1'))),
     path('api/v2/', include((api_v2_patterns, 'v2'))),
+    
+    # Swagger docs
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
