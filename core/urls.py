@@ -1,37 +1,22 @@
+"""
+URL configuration for core project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
 from django.contrib import admin
-from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-
-# API V1 URLs (Raw SQL)
-api_v1_patterns = [
-    path('users/', include('users.api.v1.urls')),
-    path('books/', include('books.api.v1.urls')),
-    path('orders/', include('orders.api.v1.urls')),
-]
-
-# API V2 URLs (Django ORM)
-api_v2_patterns = [
-    path('users/', include('users.api.v2.urls')),
-    path('books/', include('books.api.v2.urls')),
-    path('orders/', include('orders.api.v2.urls')),
-]
+from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # Auth Endpoints
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    # Versioned API Endpoints
-    path('api/v1/', include((api_v1_patterns, 'v1'))),
-    path('api/v2/', include((api_v2_patterns, 'v2'))),
-    
-    # Swagger docs
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
