@@ -30,4 +30,7 @@ urlpatterns = [
 
     # Library app
     path('api/v1/library/', include('library.urls', namespace='library')),
+
+    # Inventory app
+    path('api/v1/inventory/', include('inventory.urls', namespace='inventory')),
 ]

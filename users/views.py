@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -11,5 +11,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
+@extend_schema(tags=['Authentication'])
 class LoginView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
