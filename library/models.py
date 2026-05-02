@@ -46,3 +46,17 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Rating(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='ratings')
+    score = models.PositiveSmallIntegerField()
+    review = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('book', 'user')
+
+    def __str__(self):
+        return f"{self.book.title} - {self.score} by {self.user.username}"

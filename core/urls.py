@@ -33,4 +33,10 @@ urlpatterns = [
 
     # Inventory app
     path('api/v1/inventory/', include('inventory.urls', namespace='inventory')),
+
+    # Orders app
+    path('api/v1/orders/', include('orders.urls', namespace='orders')),
+
+    # Finance app
+    path('api/v1/finance/', include('finance.urls', namespace='finance')),
 ]

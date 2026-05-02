@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema_view, extend_schema
-from .models import Branch, Author, Genre, Book
-from .serializers import BranchSerializer, AuthorSerializer, GenreSerializer, BookSerializer, BookListSerializer
+from .models import Branch, Author, Genre, Book, Rating
+from .serializers import BranchSerializer, AuthorSerializer, GenreSerializer, BookSerializer, BookListSerializer, RatingSerializer
 from .permissions import IsAdminOrManager
 
 
@@ -77,4 +77,28 @@ class BookViewSet(ModelViewSet):
         if author:
             qs = qs.filter(author_id=author)
         return qs
+
+
+@extend_schema_view(
+    list=extend_schema(tags=['Library: Ratings']),
+    create=extend_schema(tags=['Library: Ratings']),
+    retrieve=extend_schema(tags=['Library: Ratings']),
+    update=extend_schema(tags=['Library: Ratings']),
+    partial_update=extend_schema(tags=['Library: Ratings']),
+    destroy=extend_schema(tags=['Library: Ratings']),
+)
+class RatingViewSet(ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    # Allow read for all, but only authenticated users can rate
+    def get_permissions(self):
+        from rest_framework.permissions import AllowAny, IsAuthenticated
+        if self.action in ('list', 'retrieve'):
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 

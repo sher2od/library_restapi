@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import Branch, Author, Genre, Book
+from .models import Branch, Author, Genre, Book, Rating
+
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Rating
+        fields = ('id', 'book', 'user', 'username', 'score', 'review', 'created_at')
+        read_only_fields = ('user',)
 
 
 class BranchSerializer(serializers.ModelSerializer):
