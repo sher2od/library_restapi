@@ -25,12 +25,14 @@ class Payment(models.Model):
 
     @classmethod
     def calculate_fine(cls, order):
-        # 1% penalty per day overdue based on the book's daily_price
-        if order.status == Order.Status.OVERDUE and order.return_date and order.due_date:
-            days_overdue = (order.return_date - order.due_date).days
-            if days_overdue > 0:
-                daily_price = order.copy.book.daily_price
-                fine_per_day = daily_price * Decimal('0.01')
-                total_fine = fine_per_day * days_overdue
-                return total_fine
-        return Decimal('0.00')
+        # 1% penalty per day overdue based on each book copy's daily_price in order items
+        total_fine = Decimal('0.00')
+        for item in order.items.all():
+            if item.status == item.Status.OVERDUE and item.return_date and order.due_date:
+                days_overdue = (item.return_date - order.due_date).days
+                if days_overdue > 0:
+                    daily_price = item.copy.book.daily_price
+                    fine_per_day = daily_price * Decimal('0.01')
+                    total_fine += fine_per_day * days_overdue
+        return total_fine
+
